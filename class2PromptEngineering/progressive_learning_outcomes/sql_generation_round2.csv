@@ -1,0 +1,74 @@
+﻿id,prompt,sql
+1,查询所有客户的姓名和邮箱。,"SELECT name, email FROM customers;"
+2,查找所有来自上海（city = 'Shanghai'）的客户。,SELECT * FROM customers WHERE city = 'Shanghai';
+3,找出金额大于 500 的订单。,SELECT * FROM orders WHERE amount > 500;
+4,统计订单总数。,SELECT COUNT(*) AS total_orders FROM orders;
+5,按城市统计客户数量。,"SELECT city, COUNT(*) AS customer_count
+FROM customers
+GROUP BY city;"
+6,查询 2024 年创建的订单。,"SELECT * 
+FROM orders 
+WHERE YEAR(order_date) = 2024;"
+7,列出所有未支付（pending）的订单 id 和金额。,"SELECT orders.id, orders.amount 
+FROM orders 
+WHERE orders.status = 'pending';"
+8,查询每个客户的订单总金额。,"SELECT c.id AS customer_id, c.name, SUM(o.amount) AS total_amount
+FROM customers c
+JOIN orders o ON c.id = o.customer_id
+GROUP BY c.id, c.name;"
+9,显示每个产品的总销售数量。,"SELECT p.id, p.name, SUM(oi.quantity) AS total_quantity
+FROM products p
+JOIN order_items oi ON p.id = oi.product_id
+GROUP BY p.id, p.name;"
+10,找出购买次数最多的客户（按订单数排序）。,"SELECT c.id, c.name, COUNT(o.id) AS order_count
+FROM customers c
+JOIN orders o ON c.id = o.customer_id
+GROUP BY c.id, c.name
+ORDER BY order_count DESC
+LIMIT 1;"
+11,查询订单金额最高的前 5 个订单。,"SELECT id, customer_id, amount, order_date, status 
+FROM orders 
+ORDER BY amount DESC 
+LIMIT 5;"
+12,查询每个月的订单数量。,"SELECT DATE_FORMAT(order_date, '%Y-%m') AS month, COUNT(*) AS order_count
+FROM orders
+GROUP BY month
+ORDER BY month;"
+13,查找购买过价格高于 100 的产品的客户。,"SELECT DISTINCT c.id, c.name, c.email, c.age, c.city
+FROM customers c
+JOIN orders o ON c.id = o.customer_id
+JOIN order_items oi ON o.id = oi.order_id
+JOIN products p ON oi.product_id = p.id
+WHERE p.price > 100;"
+14,查询每个客户下单的次数。,"SELECT c.id AS customer_id, c.name, COUNT(o.id) AS order_count
+FROM customers c
+LEFT JOIN orders o ON c.id = o.customer_id
+GROUP BY c.id, c.name;"
+15,列出总消费金额大于 2000 的客户。,"SELECT c.id, c.name, c.email, c.age, c.city
+FROM customers c
+JOIN orders o ON c.id = o.customer_id
+JOIN order_items oi ON o.id = oi.order_id
+GROUP BY c.id, c.name, c.email, c.age, c.city
+HAVING SUM(oi.quantity * p.price) > 2000;"
+16,计算所有订单的平均金额。,"SELECT AVG(amount) AS average_amount
+FROM orders;"
+17,查询销售额最高的商品（按总金额排序）。,"SELECT p.id, p.name, SUM(oi.quantity * p.price) AS total_sales
+FROM products p
+JOIN order_items oi ON p.id = oi.product_id
+JOIN orders o ON oi.order_id = o.id
+WHERE o.status = 'completed'
+GROUP BY p.id, p.name
+ORDER BY total_sales DESC
+LIMIT 1;"
+18,显示所有订单及其对应客户的名字。,"SELECT orders.id, customers.name 
+FROM orders 
+JOIN customers ON orders.customer_id = customers.id;"
+19,按状态统计订单数量。,"SELECT status, COUNT(*) AS order_count
+FROM orders
+GROUP BY status;"
+20,列出购买过 'Laptop' 商品的所有客户。,"SELECT DISTINCT c.id, c.name, c.email, c.age, c.city
+FROM customers c
+JOIN orders o ON c.id = o.customer_id
+JOIN order_items oi ON o.id = oi.order_id
+JOIN products p ON oi.product_id = p.id
+WHERE p.name = 'Laptop';"

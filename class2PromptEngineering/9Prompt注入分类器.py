@@ -5,14 +5,6 @@ from dotenv import load_dotenv, find_dotenv
 _ = load_dotenv(find_dotenv())  # 读取本地 .env 文件，里面定义了 OPENAI_API_KEY
 
 openai.api_key = os.getenv('OPENAI_API_KEY')
-def get_completion(prompt, model="gpt-4",temperature=0):
-    messages = [{"role": "user", "content": prompt}]
-    response = openai.ChatCompletion.create(
-        model=model,
-        messages=messages,
-        temperature=temperature # 模型输出的随机性，0 表示随机性最小
-    )
-    return response.choices[0].message["content"]
 
 def get_chat_completion(session, user_prompt, model="gpt-3.5-turbo"):
     session.append({"role": "user", "content": user_prompt})
