@@ -1,0 +1,79 @@
+#Chain Of Thoughts思维链
+#Let’s think step by step
+#大模型并不适用于算算术，可以采用Chain of Thoughts思维链的方式。
+#案例：客服质检
+# 任务本质是检查客服与用户的对话是否有不合规的地方
+# - 质检是电信运营商和金融券商大规模使用的一项技术
+# - 每个涉及到服务合规的检查点称为一个质检项
+
+
+
+
+#产品信息准确性例子：当向用户介绍流量套餐产品时，客服人员必须准确提及产品名称、月费价格、月流量总量、适用条件（如有）
+#上述信息缺失一项或多项，或信息与实时不符，都算信息不准确
+
+
+from openai import OpenAI
+from dotenv import load_dotenv, find_dotenv
+
+_=load_dotenv(find_dotenv())  # 读取 .env 文件中的环境变量
+client = OpenAI(api_key="sk你的key")
+
+
+def get_compleion(prompt, model= "gpt-3.5-turbo"):
+  message = [{"role": "user", "content": prompt}]
+  response = client.chat.completions.create(
+    model=model,
+    messages=message,
+    temperature=0,#随机性
+  )
+  msg =  response.choices[0].message.content
+  #把模型生成的恢复加入到消息历史。保证下次调用模型时，知道上下文
+  return msg
+
+
+instruction="""给定一段用户与手机流量套餐客服的对话，
+你的任务是判断客服介绍产品信息的准确性：
+
+当向用户介绍流量套餐产品时，客服人员必须准确提及产品名称、月费价格和月流量总量 上述信息缺失一项或多项，或信息与实时不符，都算信息不准确
+
+已知产品包括：
+
+经济套餐：月费50元，月流量10G
+畅游套餐：月费180元，月流量100G
+无限套餐：月费300元，月流量1000G
+校园套餐：月费150元，月流量200G，限在校学生办理
+"""
+
+# 输出描述
+output_format = """
+以JSON格式输出。
+如果信息准确，输出：{"accurate":true}
+如果信息不准确，输出：{"accurate":false}
+"""
+
+
+context1= """
+用户：你们有什么流量大的套餐
+客服：您好，我们现在正在推广无限套餐，每月300元就可以享受1000G流量，您感兴趣吗
+"""
+
+context2 = """
+用户：有什么便宜的流量套餐
+客服：您好，我们有个经济型套餐，50元每月
+"""
+
+
+context3 = """
+用户：流量大的套餐有什么
+客服：我们推荐畅游套餐，180元每月，100G流量，大多数人都够用的
+用户：学生有什么优惠吗
+客服：如果是在校生的话，可以办校园套餐，150元每月，含200G流量，比非学生的畅游套餐便宜流量还多
+"""
+
+#一个一个context检查
+prompt = f"{instruction}{output_format}请一步步分析一下对话{context3}"
+response=get_compleion(prompt)
+print(response)
+
+
