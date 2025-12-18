@@ -5,7 +5,7 @@ import os, json, copy
 from dotenv import load_dotenv, find_dotenv
 _ = load_dotenv(find_dotenv())  # 读取本地 .env 文件，里面定义了 OPENAI_API_KEY
 
-openai.api_key = os.getenv('OPENAI_API_KEY')
+openai.api_key = os.getenv('')
 
 instruction = """
 你的任务是识别用户对手机流量套餐产品的选择条件。
@@ -44,6 +44,8 @@ examples = """
 经济套餐：{"name":"经济套餐"}
 """
 
+
+#自然语言理解部分
 class NLU:
     def __init__(self):
         self.prompt_template = f"{instruction}\n\n{output_format}\n\n{examples}\n\n用户输入：\n__INPUT__"
@@ -60,11 +62,11 @@ class NLU:
     def parse(self, user_input):
         prompt = self.prompt_template.replace("__INPUT__",user_input)
         return self._get_completion(prompt)
-
+#对话状态跟踪部分
 class DST:
     def __init__(self):
         pass
-
+#nlu_semantics就是把用户的语义解析后的结果
     def update(self, state, nlu_semantics):
         if "name" in nlu_semantics:
             state.clear()
