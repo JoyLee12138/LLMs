@@ -4,7 +4,7 @@ from embedding import embed_texts
 from chunking import chunk_text
 
 #读文档
-with open('simple.txt', 'r',encoding='utf-8') as f:
+with open('文档.md', 'r',encoding='utf-8') as f:
   documents = f.read()
 
 #chunk文档
@@ -19,6 +19,8 @@ print("embeddings结束！")
 client = chromadb.Client(Settings(persist_directory = r"D:\Code\ML\LLMs\class3RAG\ragdemo\mychroma_db"))
 collection = client.create_collection("demo")
 collection.add(documents=chunks, embeddings=embeddings,metadatas=[{"source": "simple.txt", "chunk": i} for i in range(len(chunks))],ids=[f"chunk{i}" for i in range(len(chunks))])
+
+
 
 print(collection.count())
 
