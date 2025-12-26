@@ -6,5 +6,6 @@
 
   2.2RAG质量提升-实验证明怎么选chunkingsize，用哪个chunking策略，topk多大合适，rerank
 
-  3.上框架
+3.Prompt Chain
+4.LangChain
 

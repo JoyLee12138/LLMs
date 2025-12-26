@@ -1,0 +1,14 @@
+# dhcp6d
+
+> Servidor DHCPv6 sin estado.
+> No debe invocarse manualmente.
+> Vea también: `InternetSharing`.
+> Más información: <https://www.manpagez.com/man/8/dhcp6d/>.
+
+- Inicia el proceso residente:
+
+`dhcp6d`
+
+- Utiliza una configuración personalizada:
+
+`dhcp6d {{ruta/al/archivo_config}}`
